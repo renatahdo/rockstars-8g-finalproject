@@ -15,6 +15,31 @@ export interface Album {
     image: string,
 }
 
+export interface GetAlbumByIdDTO {
+    _id: string;
+}
+export interface CreateAlbumDTO {
+    name: string;
+    releaseDate: string;
+    singer: string;
+    songs: Song[];
+    price: number;
+    genre: Genre;
+    stock: number;
+}
+export interface UpdateAlbumDTO {
+    _id: string;
+    releaseDate: string;
+    name: string;
+    singer: string;
+    songs: Song[];
+    price: number;
+    genre: Genre;
+}
+export interface DeleteAlbumDTO {
+    _id: string;
+}
+
 const schema = new Schema<Album>({
     name: { type: String, required: true },
     singer: { type: Schema.Types.ObjectId, reference: 'singers', required: true },

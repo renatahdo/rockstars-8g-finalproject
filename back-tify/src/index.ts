@@ -1,21 +1,35 @@
 import express from "express";
 import cors from "cors";
 import { run } from "./modules/db";
-import { 
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    login,
-    deleteUser
-} from "./controllers/user";
+import { createUser, deleteUser, getAllUsers, getUserById, login, updateUser } from "./controllers/user";
 import {
-    getAllGenres,
-    getGenreById,
-    createGenre,
-    updateGenre,
-    deleteGenre,
+  createGenre,
+  deleteGenre,
+  getAllGenres,
+  getGenreById,
+  updateGenre,
 } from "./controllers/genre";
+import {
+    createSinger,
+    deleteSinger,
+    getAllSingers,
+    getSingerById,
+    updateSinger,
+} from "./controllers/singer";
+import {
+    createSong,
+    deleteSong,
+    getAllSongs,
+    getSongById,
+    updateSong,
+} from "./controllers/song";
+import {
+    createAlbum,
+    deleteAlbum,
+    getAlbumById,
+    getAllAlbums,
+    updateAlbum,
+} from "./controllers/album";
 
 const app = express();
 
@@ -25,10 +39,97 @@ app.use(
     })
 );
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.json());
-
 app.set("secretKey", process.env.SECRET_KEY);
+
+// Album
+app.get("/album", async (req, res) => {
+    const albums = await getAllAlbums();
+    res.send(albums);
+});
+
+app.get("/album/:_id", async (req, res) => {
+    const album = await getAlbumById({ _id: req.params._id });
+    res.send(album);
+});
+
+app.post("/album", async (req, res) => {
+    const album = await createAlbum(req.body);
+    res.send(album);
+});
+
+app.patch("/album/:_id", async (req, res) => {
+    const album = await updateAlbum({
+        _id: req.params._id,
+        ...req.body,
+    });
+    res.send(album);
+});
+
+app.delete("/album/:_id", async (req, res) => {
+    const album = await deleteAlbum({ _id: req.params._id });
+    res.send(album);
+});
+
+// Song
+      
+app.get("/song", async (req, res) => {
+    const songs = await getAllSongs();
+    res.send(songs);
+});
+    
+app.get("/song/:_id", async (req, res) => {
+    const song = await getSongById({ _id: req.params._id });
+    res.send(song);
+});
+
+app.post("/song", async (req, res) => {
+    const song = await createSong(req.body);
+    res.send(song);
+});
+
+app.patch("/song/:_id", async (req, res) => {
+    const song = await updateSong({
+        _id: req.params._id,
+        ...req.body,
+    });
+    res.send(song);
+});
+
+app.delete("/song/:_id", async (req, res) => {
+    const song = await deleteSong({ _id: req.params._id });
+    res.send(song);
+});
+
+// Singer
+
+app.get("/singer", async (req, res) => {
+    const singers = await getAllSingers();
+    res.send(singers);
+});
+
+app.get("/singer/:_id", async (req, res) => {
+    const singer = await getSingerById({ _id: req.params._id });
+    res.send(singer);
+});
+
+app.post("/singer", async (req, res) => {
+    const singer = await createSinger(req.body);
+    res.send(singer);
+});
+
+app.patch("/singer/:_id", async (req, res) => {
+    const singer = await updateSinger({
+        _id: req.params._id,
+        ...req.body,
+    });
+    res.send(singer);
+});
+
+app.delete("/singer/:_id", async (req, res) => {
+    const singer = await deleteSinger({ _id: req.params._id });
+    res.send(singer);
+});
 
 // Genre
 app.get("/genre", async (req, res) => {

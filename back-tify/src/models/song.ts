@@ -14,6 +14,26 @@ export interface Song {
     price?: number,
 }
 
+export interface GetSongByIdDTO {
+    _id: string;
+}
+export interface CreateSongDTO {
+    name: string;
+    singer: Singer;
+    album?: Album;
+    price?: number;
+}
+export interface UpdateSongDTO {
+    _id: string;
+    name: string;
+    singer: Singer;
+    album?: Album;
+    price?: number;
+}
+export interface DeleteSongDTO {
+    _id: string;
+}
+
 const schema = new Schema<Song>({
     name: { type: String, required: true },
     singer: { type: Schema.Types.ObjectId, reference: 'singers', required: true },
