@@ -40,7 +40,8 @@ export const login = async ({ password, email, username } : LoginDTO ) => {
     const token = jwt.sign(
         {
             _id: user._id,
-            email
+            email, 
+            role: user.type,
         },
         SECRET_KEY,
         {

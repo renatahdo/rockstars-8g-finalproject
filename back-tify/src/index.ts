@@ -3,11 +3,11 @@ import cors from "cors";
 import { run } from "./modules/db";
 import { createUser, deleteUser, getAllUsers, getUserById, login, updateUser } from "./controllers/user";
 import {
-  createGenre,
-  deleteGenre,
-  getAllGenres,
-  getGenreById,
-  updateGenre,
+    createGenre,
+    deleteGenre,
+    getAllGenres,
+    getGenreById,
+    updateGenre,
 } from "./controllers/genre";
 import {
     createSinger,
@@ -30,6 +30,7 @@ import {
     getAllAlbums,
     updateAlbum,
 } from "./controllers/album";
+import { validateToken, validateAdmin } from "./modules/auth";
 
 const app = express();
 
@@ -43,22 +44,22 @@ app.use(express.json());
 app.set("secretKey", process.env.SECRET_KEY);
 
 // Album
-app.get("/album", async (req, res) => {
+app.get("/album", validateToken, async (req, res) => {
     const albums = await getAllAlbums();
     res.send(albums);
 });
 
-app.get("/album/:_id", async (req, res) => {
+app.get("/album/:_id", validateToken, async (req, res) => {
     const album = await getAlbumById({ _id: req.params._id });
     res.send(album);
 });
 
-app.post("/album", async (req, res) => {
+app.post("/album", validateAdmin, async (req, res) => {
     const album = await createAlbum(req.body);
     res.send(album);
 });
 
-app.patch("/album/:_id", async (req, res) => {
+app.patch("/album/:_id", validateAdmin, async (req, res) => {
     const album = await updateAlbum({
         _id: req.params._id,
         ...req.body,
@@ -66,29 +67,29 @@ app.patch("/album/:_id", async (req, res) => {
     res.send(album);
 });
 
-app.delete("/album/:_id", async (req, res) => {
+app.delete("/album/:_id", validateAdmin, async (req, res) => {
     const album = await deleteAlbum({ _id: req.params._id });
     res.send(album);
 });
 
 // Song
       
-app.get("/song", async (req, res) => {
+app.get("/song", validateToken, async (req, res) => {
     const songs = await getAllSongs();
     res.send(songs);
 });
     
-app.get("/song/:_id", async (req, res) => {
+app.get("/song/:_id", validateToken, async (req, res) => {
     const song = await getSongById({ _id: req.params._id });
     res.send(song);
 });
 
-app.post("/song", async (req, res) => {
+app.post("/song", validateAdmin, async (req, res) => {
     const song = await createSong(req.body);
     res.send(song);
 });
 
-app.patch("/song/:_id", async (req, res) => {
+app.patch("/song/:_id", validateAdmin, async (req, res) => {
     const song = await updateSong({
         _id: req.params._id,
         ...req.body,
@@ -96,29 +97,29 @@ app.patch("/song/:_id", async (req, res) => {
     res.send(song);
 });
 
-app.delete("/song/:_id", async (req, res) => {
+app.delete("/song/:_id", validateAdmin, async (req, res) => {
     const song = await deleteSong({ _id: req.params._id });
     res.send(song);
 });
 
 // Singer
 
-app.get("/singer", async (req, res) => {
+app.get("/singer", validateToken, async (req, res) => {
     const singers = await getAllSingers();
     res.send(singers);
 });
 
-app.get("/singer/:_id", async (req, res) => {
+app.get("/singer/:_id", validateToken, async (req, res) => {
     const singer = await getSingerById({ _id: req.params._id });
     res.send(singer);
 });
 
-app.post("/singer", async (req, res) => {
+app.post("/singer", validateAdmin, async (req, res) => {
     const singer = await createSinger(req.body);
     res.send(singer);
 });
 
-app.patch("/singer/:_id", async (req, res) => {
+app.patch("/singer/:_id", validateAdmin, async (req, res) => {
     const singer = await updateSinger({
         _id: req.params._id,
         ...req.body,
@@ -126,28 +127,28 @@ app.patch("/singer/:_id", async (req, res) => {
     res.send(singer);
 });
 
-app.delete("/singer/:_id", async (req, res) => {
+app.delete("/singer/:_id", validateAdmin, async (req, res) => {
     const singer = await deleteSinger({ _id: req.params._id });
     res.send(singer);
 });
 
 // Genre
-app.get("/genre", async (req, res) => {
+app.get("/genre", validateToken, async (req, res) => {
     const genres = await getAllGenres();
     res.send(genres);
 });
 
-app.get("/genre/:_id", async (req, res) => {
+app.get("/genre/:_id", validateToken, async (req, res) => {
     const genre = await getGenreById({ _id: req.params._id });
     res.send(genre);
 });
 
-app.post("/genre", async (req, res) => {
+app.post("/genre", validateAdmin, async (req, res) => {
     const genre = await createGenre(req.body);
     res.send(genre);
 });
 
-app.patch("/genre/:_id", async (req, res) => {
+app.patch("/genre/:_id", validateAdmin, async (req, res) => {
     const genre = await updateGenre({
         _id: req.params._id,
         description: req.body.description,
@@ -155,7 +156,7 @@ app.patch("/genre/:_id", async (req, res) => {
     res.send(genre);
 });
 
-app.delete("/genre/:_id", async (req, res) => {
+app.delete("/genre/:_id", validateAdmin, async (req, res) => {
     const genre = await deleteGenre({_id: req.params._id,});
     res.send(genre);
 });
@@ -172,22 +173,22 @@ app.post("/auth", async (req, res) => {
     }
 });
 
-app.get("/user", async (req, res) => {
+app.get("/user", validateAdmin, async (req, res) => {
     const users = await getAllUsers();
     res.send(users);
 });
 
-app.get("/user/:_id", async (req, res) => {
+app.get("/user/:_id", validateAdmin, async (req, res) => {
     const user = await getUserById({ _id: req.params._id });
     res.send(user);
 });
 
-app.post("/user", async (req, res) => {
+app.post("/user", validateAdmin, async (req, res) => {
     const user = await createUser(req.body);
     res.send(user);
 });
 
-app.patch("/user/:_id", async (req, res) => {
+app.patch("/user/:_id", validateAdmin, async (req, res) => {
     const user = await updateUser({
         _id: req.params._id,
         username: req.body.username,
@@ -197,7 +198,7 @@ app.patch("/user/:_id", async (req, res) => {
     res.send(user);
 });
 
-app.delete("/user/:_id", async (req, res) => {
+app.delete("/user/:_id", validateAdmin, async (req, res) => {
     const genre = await deleteUser({_id: req.params._id,});
     res.send(genre);
 });
